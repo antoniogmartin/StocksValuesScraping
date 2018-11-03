@@ -1,16 +1,9 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[16]:
-
-
 import requests
 import lxml.html as lh
 import pandas as pd
-
-
-# In[17]:
-
 
 url='http://www.infobolsa.es/acciones/ibex35'
 #Create a handle, page, to handle the contents of the website
@@ -19,10 +12,6 @@ page = requests.get(url)
 doc = lh.fromstring(page.content)
 #Parse data that are stored between <tr>..</tr> of HTML
 tr_elements = doc.xpath('//tr')
-
-
-# In[18]:
-
 
 #Check the length of the first 12 rows
 [len(T) for T in tr_elements[:15]]
@@ -36,10 +25,6 @@ for t in tr_elements[0]:
     name=t.text_content()
     f'{i}:"{name}"'
     col.append((name,[]))
-
-
-# In[19]:
-
 
 #Since out first row is the header, data is stored on the second row onwards
 for j in range(1,len(tr_elements)):
@@ -68,10 +53,6 @@ for j in range(1,len(tr_elements)):
         #Increment i for the next column
         i+=1
 
-
-# In[34]:
-
-
 [len(C) for (title,C) in col]
 
 Dict={title:column for (title,column) in col}
@@ -82,12 +63,6 @@ df = df.replace('\n',' ', regex=True)
 df = df.replace('\r',' ', regex=True) 
 df
        
-
-    
-
-
-# In[ ]:
-
 
 
 
