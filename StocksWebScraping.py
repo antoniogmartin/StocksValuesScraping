@@ -20,7 +20,7 @@ def writeInCSV( df, title ):
     file_name = title + '_' + current_date + '.csv'
     df.to_csv(file_name)
 
-    return
+    return file_name;
 
 def get_table( url, size ):
 
@@ -68,14 +68,26 @@ def get_table( url, size ):
 
     Dict={title:column for (title,column) in col}
     df=pd.DataFrame(Dict)
-    #"\n\r".rstrip("\n\r")
+    
 
     df = df.replace('\n',' ', regex=True) 
     df = df.replace('\r',' ', regex=True) 
     
-    return df;
+    return transform_dataFrame(df);
 
-#We store all pages and their sizes
+def transform_dataFrame( df ):
+    clean_dataFrame = pd.DataFrame(df['Nombre'])
+    clean_dataFrame.columns = ['Hora']
+    clean_dataFrame.columns = ['Stocks']
+    clean_dataFrame.columns = ['Volumen']
+    
+    clean_dataFrame['Nombre'] = df['Nombre']
+    clean_dataFrame['Hora'] = df['Hora']
+    clean_dataFrame['Stocks'] = df['Último']
+    clean_dataFrame['Volumen'] = df['Volumen']
+    
+    return clean_dataFrame;
+
 url = ['http://www.infobolsa.es/acciones/ibex35', 'http://www.infobolsa.es/acciones/nasdaq' ]
 size = [15,11]
 
@@ -83,4 +95,4 @@ for i in range(len(url)):
     #to get the page
     page = requests.get(url[i])
     title = title_of_table( page )
-    writeInCSV( get_table(url[i], size[i]), title )
+    file_name = writeInCSV( get_table(url[i], size[i]), title )
