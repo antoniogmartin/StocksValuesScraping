@@ -1,3 +1,9 @@
+'''
+Created on 31 oct. 2018
+
+@author: aguzman
+'''
+
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -11,17 +17,6 @@ if __name__ == '__main__':
     i=0
     n_times=0
     c_res=[]
-<<<<<<< HEAD
-    if (len(c_val)>=len(c_name)):
-        while(i<len(c_name)):
-            c_pair=c_name[i].text.replace('\n','').split('/')
-            
-            c_res.append((c_pair[0],c_pair[1],c_val[i].text,c_date.text ))
-            i+=1
-    else:
-        while(i<len(c_val)):
-            c_pair=c_name[i].text.replace('\n','').split('/')
-=======
 #     rp = urllib.robotparser.RobotFileParser()
 #     rp.set_url("http://www.google.es/robots.txt")
 #     rp.read()
@@ -53,15 +48,9 @@ if __name__ == '__main__':
         print(n_times)
         if(n_times<=1):
             sleep(0)
->>>>>>> adding robots.txt analysis
             
     labels = ['CURRENCY_1','CURRENCY_2', 'VALUE','DATE','HOUR']
 
-<<<<<<< HEAD
-df=pd.DataFrame.from_records(c_res, columns=labels)
-print(df)
-=======
     df=pd.DataFrame.from_records(c_res, columns=labels)
     print(df)
     df.to_csv("~/Escritorio/currencies_stock.csv", sep='\t', encoding='utf-8')
->>>>>>> adding robots.txt analysis
