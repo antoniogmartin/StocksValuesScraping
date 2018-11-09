@@ -53,4 +53,4 @@ if __name__ == '__main__':
 
     df=pd.DataFrame.from_records(c_res, columns=labels)
     print(df)
-    df.to_csv("~/Escritorio/currencies_stock.csv", sep='\t', encoding='utf-8')
+    df.to_csv("~/Escritorio/currencies_stock.csv", sep=',', encoding='utf-8')
