@@ -4,6 +4,7 @@ import pandas as pd
 import bs4
 from bs4 import BeautifulSoup
 import datetime
+from time import sleep
 
 def title_of_table( page ):
     page_content = BeautifulSoup(page.content)
@@ -14,10 +15,11 @@ def title_of_table( page ):
     text = text.replace(' ','')
     
     return text;
+
 def writeInCSV( df, title ):
     now = datetime.datetime.now()
     current_date =now.strftime("%Y-%m-%d %H_%M")
-    file_name = title + '_' + current_date + '.csv'
+    file_name = title + "/" + title + '_' + current_date + '.csv'
     df.to_csv(file_name)
 
     return file_name;
@@ -48,7 +50,7 @@ def get_table( url, size ):
         #T is our j'th row
         T=tr_elements[j]
 
-        #If row is not of size 10, the //tr data is not from our table 
+        #If row is not of exactly size, the //tr data is not from our table 
         if len(T)!=size:
             break
 
@@ -73,26 +75,52 @@ def get_table( url, size ):
     df = df.replace('\n',' ', regex=True) 
     df = df.replace('\r',' ', regex=True) 
     
-    return transform_dataFrame(df);
+    return df;
 
 def transform_dataFrame( df ):
     clean_dataFrame = pd.DataFrame(df['Nombre'])
     clean_dataFrame.columns = ['Hora']
+    clean_dataFrame.columns = ['Fecha']
     clean_dataFrame.columns = ['Stocks']
     clean_dataFrame.columns = ['Volumen']
+    now = datetime.datetime.now()
+    current_date =now.strftime("%Y-%m-%d %H_%M")
     
     clean_dataFrame['Nombre'] = df['Nombre']
     clean_dataFrame['Hora'] = df['Hora']
+    clean_dataFrame['Fecha'] = current_date
     clean_dataFrame['Stocks'] = df['Último']
     clean_dataFrame['Volumen'] = df['Volumen']
     
     return clean_dataFrame;
 
+
+# URLs which we will scrap
 url = ['http://www.infobolsa.es/acciones/ibex35', 'http://www.infobolsa.es/acciones/nasdaq' ]
 size = [15,11]
 
-for i in range(len(url)):    
-    #to get the page
-    page = requests.get(url[i])
-    title = title_of_table( page )
-    file_name = writeInCSV( get_table(url[i], size[i]), title )
+# We set number of repetitions, sleeping time in seconds and a counter
+repite = 6
+duerme = 1
+n_times=0
+
+# We get the first iteration
+df_ibex = get_table(url[0], size[0])
+df_nasdaq = get_table(url[1], size[1])
+
+while(n_times<=repite):    
+    n_times= n_times + 1
+    print(n_times)
+    if(n_times<=repite):
+        sleep(duerme)
+    df_ibex = df_ibex.append(get_table(url[0], size[0]), ignore_index=True, sort=False) 
+    df_nasdaq = df_nasdaq.append(get_table(url[1], size[1]), ignore_index=True, sort=False) 
+
+print("Scraping terminado")
+
+df_ibex_cleaned = transform_dataFrame(df_ibex)
+df_nasdaq_cleaned = transform_dataFrame(df_nasdaq)
+
+df_ibex_cleaned.to_csv('ibex35.csv', sep=',', encoding='utf-8')
+df_ibex_cleaned.to_csv('nasdaq.csv', sep=',', encoding='utf-8')
+
