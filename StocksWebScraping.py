@@ -126,5 +126,5 @@ df_ibex_cleaned = transform_dataFrame(df_ibex)
 df_nasdaq_cleaned = transform_dataFrame(df_nasdaq)
 
 df_ibex_cleaned.to_csv('ibex35.csv', sep=',', encoding='utf-8')
-df_ibex_cleaned.to_csv('nasdaq.csv', sep=',', encoding='utf-8')
+df_nasdaq_cleaned.to_csv('nasdaq.csv', sep=',', encoding='utf-8')
 
