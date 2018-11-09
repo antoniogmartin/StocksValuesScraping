@@ -1,3 +1,7 @@
+'''
+Created on 31 oct. 2018
+@author: joaquinfdez
+'''
 import requests
 import lxml.html as lh
 import pandas as pd
